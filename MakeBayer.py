@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Literal
 
 from PIL import Image
 
@@ -41,7 +40,7 @@ def PrintMatrix(matrix: Matrix):
 def SaveAsImage(
     matrix: Matrix,
     tileCount: int = 1,
-    mode: Literal["L"] | Literal["I"] | Literal["F"] = "L",
+    mode: str = "L",
     folder: Path = Path.cwd(),
     ext: str = ".png",
     format: str = "PNG",
@@ -49,7 +48,8 @@ def SaveAsImage(
 ):
     matrixSize = matrix.__len__()
     outputPath = (
-        folder / f"bayer{matrixSize}{f'tile{tileCount}' if tileCount > 1 else '' }{f'mode{mode}' if mode != 'L' else '' }{ext}"
+        folder
+        / f"bayer{matrixSize}{f'tile{tileCount}' if tileCount > 1 else '' }{f'mode{mode}' if mode != 'L' else '' }{ext}"
     )
 
     img = Image.new(mode, size=(matrixSize * tileCount, matrixSize * tileCount), color=None)  # type: ignore
@@ -68,6 +68,12 @@ def SaveAsImage(
                         ).__floor__()
                     case "F":
                         color *= 1 / (matrixSize * matrixSize)
+                    case mode:
+                        raise Exception(
+                            f"""brightness normalization for mode {mode} has not been implemented! 
+                            Either disable brightness normalization by setting parameter normalize to False 
+                            or add an implementation for the mode."""
+                        )
 
             imgData[x, y] = color
     img.save(outputPath, format)
@@ -78,10 +84,10 @@ if __name__ == "__main__":
     # size should be a power of two.
     # note that matrix sizes larger than 16 go out of 0..255 range,
     # so image export will not work correctly
-    sizesLowerThan32 = 2, 4, 8, 16
-
+    sizes = 2, 4, 8, 16, 32, 64, 128, 256
     tileCounts = 1, 2, 4, 8, 16
 
+    sizesLowerThan32 = sizes[0:4]
     for size in sizesLowerThan32:
         for tileCount in tileCounts:
             matrix = MakeBayer(size)
@@ -92,8 +98,7 @@ if __name__ == "__main__":
                 mode="L",
             )
 
-    sizesHigherThan16 = 32, 64, 128, 256
-
+    sizesHigherThan16 = sizes[4:8]
     for size in sizesHigherThan16:
         for tileCount in tileCounts:
             matrix = MakeBayer(size)
@@ -102,4 +107,16 @@ if __name__ == "__main__":
                 tileCount,
                 folder=Path("./images"),
                 mode="I",
+            )
+
+    for size in sizes:
+        for tileCount in tileCounts:
+            matrix = MakeBayer(size)
+            SaveAsImage(
+                matrix,
+                tileCount,
+                folder=Path("./images"),
+                ext=".spi",
+                format="SPIDER",
+                mode="F",
             )
