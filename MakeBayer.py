@@ -1,6 +1,3 @@
-from typing import Final
-
-
 Matrix = list[list[int]]
 
 
