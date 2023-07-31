@@ -49,7 +49,7 @@ def SaveAsImage(
 ):
     matrixSize = matrix.__len__()
     outputPath = (
-        folder / f"bayer{matrixSize}{f'tile{tileCount}' if tileCount > 1 else '' }{ext}"
+        folder / f"bayer{matrixSize}{f'tile{tileCount}' if tileCount > 1 else '' }{f'mode{mode}' if mode != 'L' else '' }{ext}"
     )
 
     img = Image.new(mode, size=(matrixSize * tileCount, matrixSize * tileCount), color=None)  # type: ignore
