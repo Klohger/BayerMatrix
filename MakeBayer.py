@@ -116,7 +116,7 @@ if __name__ == "__main__":
                 matrix,
                 tileCount,
                 folder=Path("./images"),
-                ext=".spi",
-                format="SPIDER",
+                ext=".tiff",
+                format="TIFF",
                 mode="F",
             )
