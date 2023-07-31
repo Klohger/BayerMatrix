@@ -60,14 +60,16 @@ def SaveAsImage(
             if normalize:
                 match mode:
                     case "L":
-                        color = (color * (256 / (matrixSize * matrixSize))).__floor__()
+                        color = (
+                            color * (255 / ((matrixSize * matrixSize) - 1))
+                        ).__round__()
                     case "I":
                         # so apparently the docs are lying and in i mode 'I' each pixel is represented by a 16 bit unsigned integer
                         color = (
-                            color * (65536 / (matrixSize * matrixSize))
-                        ).__floor__()
+                            color * (65535 / ((matrixSize * matrixSize) - 1))
+                        ).__round__()
                     case "F":
-                        color *= 1 / (matrixSize * matrixSize)
+                        color *= 1.0 / (matrixSize * matrixSize)
                     case mode:
                         raise Exception(
                             f"""brightness normalization for mode {mode} has not been implemented! 
