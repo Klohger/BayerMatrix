@@ -43,7 +43,7 @@ def SaveAsImage(
     mode: str = "L",
     folder: Path = Path.cwd(),
     ext: str = ".png",
-    format: str = "PNG",
+    format: str | None = "PNG",
     normalize: bool = True,
 ):
     matrixSize = matrix.__len__()
