@@ -22,7 +22,7 @@ def MakeBayer(
 
     half = size // 2
     # fmt: off
-    # Subdivide into four and call recursively.
+    # Subdivide into four recursively until size is 1.
     MakeBayer(size=half,     x=x,          y=y,         value=value + (step * 0),   step=step * 4, matrix=matrix)   # Top Left
     MakeBayer(size=half,     x=x + half,   y=y + half,  value=value + (step * 1),   step=step * 4, matrix=matrix)   # Bottom Right
     MakeBayer(size=half,     x=x + half,   y=y,         value=value + (step * 2),   step=step * 4, matrix=matrix)   # Top Right
@@ -34,7 +34,7 @@ def MakeBayer(
 def PrintMatrix(matrix: Matrix):
     print(f"Bayer Matrix {matrix.__len__()}")
     for row in matrix:
-        print(*list(map(lambda n: str(n).ljust(4), row)), sep="")
+        print(*[str(num).ljust(4) for num in row], sep="")
 
 
 def SaveAsImage(
@@ -90,36 +90,35 @@ def SaveAsImage(
 # This is false: they're represented with a 16 bit unsigned integer, just like "I;16".
 # You can read about it here: https://stackoverflow.com/questions/69192736/what-is-i-mode-in-pillow
 
-# if __name__ == "__main__":
-# sizes = 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024
-# tileCounts = 1, 2, 4
-#
-# for size in sizes[0:4]: # 2, 4, 8, 16
-#    for tileCount in tileCounts:
-#        matrix = MakeBayer(size)
-#        SaveAsImage(
-#            matrix,
-#            tileCount,
-#            folder=Path("./images"),
-#            mode="L",
-#        )
-#
-# for size in sizes[4:8]: # 32, 64, 128, 256
-#    for tileCount in tileCounts:
-#        matrix = MakeBayer(size)
-#        SaveAsImage(
-#            matrix,
-#            tileCount,
-#            folder=Path("./images"),
-#            mode="I",
-#        )
-#
-# for size in sizes:
-#        matrix = MakeBayer(size)
-#        SaveAsImage(
-#            matrix,
-#            folder=Path("./images"),
-#            ext=".tiff",
-#            format="TIFF",
-#            mode="F",
-#        )
+if __name__ == "__main__":
+    sizes = 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024
+    tileCounts = 1, 2, 4
+    print(f"Generating matrices {sizes[0]}-{sizes[sizes.__len__()-1]}...")
+    matrices = {size: MakeBayer(size) for size in sizes}
+    print(f"Generated!")
+    for size in sizes[0:4]:  # 2, 4, 8, 16
+        for tileCount in tileCounts:
+            SaveAsImage(
+                matrix=matrices[size],
+                tileCount=tileCount,
+                folder=Path("./images"),
+                mode="L",
+            )
+
+    for size in sizes[4:8]:  # 32, 64, 128, 256
+        for tileCount in tileCounts:
+            SaveAsImage(
+                matrix=matrices[size],
+                tileCount=tileCount,
+                folder=Path("./images"),
+                mode="I",
+            )
+
+    for size in sizes:
+        SaveAsImage(
+            matrix=matrices[size],
+            folder=Path("./images"),
+            ext=".tiff",
+            format="TIFF",
+            mode="F",
+        )
