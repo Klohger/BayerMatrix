@@ -1,5 +1,5 @@
+from math import log10
 from pathlib import Path
-
 from PIL import Image
 
 Matrix = list[list[int]]
@@ -31,10 +31,22 @@ def MakeBayer(
     return matrix
 
 
-def PrintMatrix(matrix: Matrix):
+def PrintMatrixGrid(matrix: Matrix):
     print(f"Bayer Matrix {matrix.__len__()}")
     for row in matrix:
-        print(*[str(num).ljust(4) for num in row], sep="")
+        print(
+            *[
+                str(num).ljust(
+                    log10(matrix.__len__() * matrix.__len__() - 1).__floor__() + 1
+                )
+                for num in row
+            ],
+            sep=" ",
+        )
+
+
+def PrintMatrix(matrix: Matrix):
+    print(f"Bayer Matrix {matrix.__len__()}\n{[num for row in matrix for num in row]}")
 
 
 def SaveAsImage(
@@ -63,18 +75,15 @@ def SaveAsImage(
             if normalize:
                 match mode:
                     case "L":
-                        color = (
-                            color * (255 / ((matrixSize * matrixSize) - 1))
-                        ).__round__()
+                        color = (color * 256) // (matrixSize * matrixSize)
                     case "I" | "I;16":
-                        color = (
-                            color * (65535 / ((matrixSize * matrixSize) - 1))
-                        ).__round__()
+                        color = (color * 65536) // (matrixSize * matrixSize)
+
                     case "F":
-                        color *= 1.0 / (matrixSize * matrixSize)
-                    case mode:
+                        color /= matrixSize * matrixSize
+                    case unconfigured:
                         raise Exception(
-                            f"""brightness normalization for mode {mode} has not been implemented! 
+                            f"""brightness normalization for mode {unconfigured} has not been implemented! 
                             Either disable brightness normalization by setting parameter normalize to False 
                             or add an implementation for the mode."""
                         )
@@ -84,7 +93,7 @@ def SaveAsImage(
         img = img.resize(
             (img.width * scale, img.height * scale), resample=Image.NEAREST
         )
-    img.save(outputPath, format)
+    img.save(outputPath, format, optimize=True)
     print(f"Saved {outputPath}")
 
 
