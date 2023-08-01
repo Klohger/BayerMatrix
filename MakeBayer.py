@@ -36,9 +36,9 @@ def PrintMatrixGrid(matrix: Matrix):
     for row in matrix:
         print(
             *[
-                str(num).ljust(
+                str(num).rjust(
                     log10(matrix.__len__() * matrix.__len__() - 1).__floor__() + 1
-                )
+                , "0")
                 for num in row
             ],
             sep=" ",
