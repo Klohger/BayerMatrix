@@ -111,8 +111,9 @@ if __name__ == "__main__":
         SaveAsImage(
             matrix=matrices[size],
             # tileCount=tileCount,
-            folder=folder,
+            folder=folder / "PNG",
             mode="L",
+            sizePadding=3,
         )
 
     for size in sizes[4:8]:  # 32, 64, 128, 256
@@ -120,8 +121,9 @@ if __name__ == "__main__":
         SaveAsImage(
             matrix=matrices[size],
             # tileCount=tileCount,
-            folder=folder,
+            folder=folder / "PNG",
             mode="I",
+            sizePadding=3,
         )
 
     for size in sizes:
@@ -129,7 +131,8 @@ if __name__ == "__main__":
         SaveAsImage(
             matrix=matrices[size],
             # tileCount=tileCount,
-            folder=folder,
+            folder=folder / "TIFF",
             ext="tiff",
             mode="F",
+            sizePadding=4,
         )
