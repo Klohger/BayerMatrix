@@ -46,11 +46,12 @@ def SaveAsImage(
     format: str | None = None,
     normalize: bool = True,
     scale: int = 1,
+    sizePadding: int | None = None,
 ):
     matrixSize = matrix.__len__()
     outputPath = (
         folder
-        / f'Bayer.{matrixSize}-Scale.{scale}-Tile.{tileCount}-Mode.{mode}{ "-Norm" if normalize else "" }.{ext}'
+        / f'Bayer.{str(matrixSize).rjust(sizePadding, "0") if sizePadding else matrixSize}-Scale.{scale}-Tile.{tileCount}-Mode.{mode}{ "-Norm" if normalize else "" }.{ext}'
     )
 
     img = Image.new(mode, size=(matrixSize * tileCount, matrixSize * tileCount), color=None)  # type: ignore
