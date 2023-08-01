@@ -115,10 +115,12 @@ if __name__ == "__main__":
             )
 
     for size in sizes:
-        SaveAsImage(
-            matrix=matrices[size],
-            folder=Path("./images"),
-            ext=".tiff",
-            format="TIFF",
-            mode="F",
-        )
+        for tileCount in tileCounts:
+            SaveAsImage(
+                matrix=matrices[size],
+                tileCount=tileCount,
+                folder=Path("./images"),
+                ext=".tiff",
+                format="TIFF",
+                mode="F",
+            )
