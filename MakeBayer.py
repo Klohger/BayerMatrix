@@ -106,12 +106,15 @@ if __name__ == "__main__":
     folder = Path("./images")
     folder.mkdir(exist_ok=True)
 
+    pngFolder = folder / "PNG"
+    pngFolder.mkdir(exist_ok=True)
+
     for size in sizes[0:4]:  # 2, 4, 8, 16
         # for tileCount in tileCounts:
         SaveAsImage(
             matrix=matrices[size],
             # tileCount=tileCount,
-            folder=folder / "PNG",
+            folder=pngFolder,
             mode="L",
             sizePadding=3,
         )
@@ -121,17 +124,19 @@ if __name__ == "__main__":
         SaveAsImage(
             matrix=matrices[size],
             # tileCount=tileCount,
-            folder=folder / "PNG",
+            folder=pngFolder,
             mode="I",
             sizePadding=3,
         )
 
+    tiffFolder = folder / "TIFF"
+    tiffFolder.mkdir(exist_ok=True)
     for size in sizes:
         # for tileCount in tileCounts:
         SaveAsImage(
             matrix=matrices[size],
             # tileCount=tileCount,
-            folder=folder / "TIFF",
+            folder=tiffFolder,
             ext="tiff",
             mode="F",
             sizePadding=4,
