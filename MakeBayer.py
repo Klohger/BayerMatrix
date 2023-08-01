@@ -50,7 +50,7 @@ def SaveAsImage(
     matrixSize = matrix.__len__()
     outputPath = (
         folder
-        / f'Bayer[{matrixSize}]-Scale[{scale}]-Tile[{tileCount}]-Mode[{mode}]{ "-Norm" if normalize else "" }.{ext}'
+        / f'Bayer.{matrixSize}-Scale.{scale}-Tile.{tileCount}-Mode.{mode}{ "-Norm" if normalize else "" }.{ext}'
     )
 
     img = Image.new(mode, size=(matrixSize * tileCount, matrixSize * tileCount), color=None)  # type: ignore
@@ -120,7 +120,7 @@ if __name__ == "__main__":
             matrix=matrices[size],
             # tileCount=tileCount,
             folder=folder,
-            mode="I;16",
+            mode="I",
         )
 
     for size in sizes:
