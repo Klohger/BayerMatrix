@@ -2,7 +2,7 @@
 
 A simple algorithm to generate bayer matrix for ordered dithering. Can output to PNG using PIL. The [PNG files in releases](https://github.com/tromero/BayerMatrix/blob/master/images/) should be enough for most use cases.
 
-##Examples
+## Examples
 
 ![Bayer 256-Scale 1-Tile 1-Mode I-Norm](https://github.com/Klohger/BayerMatrix/assets/39872370/be60e4bc-7374-4ef7-9abd-9879c1ea2760) 256x256 matrix 
 
