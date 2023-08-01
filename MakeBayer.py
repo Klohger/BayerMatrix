@@ -45,11 +45,12 @@ def SaveAsImage(
     ext: str = "png",
     format: str | None = None,
     normalize: bool = True,
+    scale: int = 1,
 ):
     matrixSize = matrix.__len__()
     outputPath = (
         folder
-        / f'bayer{matrixSize}-Tile[{tileCount}]-Mode[{mode}]{ "-Norm" if normalize else "" }.{ext}'
+        / f'Bayer[{matrixSize}]-Scale[{scale}]-Tile[{tileCount}]-Mode[{mode}]{ "-Norm" if normalize else "" }.{ext}'
     )
 
     img = Image.new(mode, size=(matrixSize * tileCount, matrixSize * tileCount), color=None)  # type: ignore
@@ -78,6 +79,10 @@ def SaveAsImage(
                         )
 
             imgData[x, y] = color
+    if scale > 1:
+        img = img.resize(
+            (img.width * scale, img.height * scale), resample=Image.NEAREST
+        )
     img.save(outputPath, format)
     print(f"Saved {outputPath}")
 
@@ -92,7 +97,7 @@ def SaveAsImage(
 # You can read about it here: https://stackoverflow.com/questions/69192736/what-is-i-mode-in-pillow
 if __name__ == "__main__":
     sizes = 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024
-    tileCounts = 1, 2, 4
+    # tileCounts = 1, 2, 4
     print(f"Generating matrices {sizes[0]}-{sizes[sizes.__len__()-1]}...")
     matrices = {size: MakeBayer(size) for size in sizes}
     print(f"Generated!")
