@@ -1,6 +1,6 @@
 # BayerMatrix
 
-A simple algorithm to generate bayer matrix for ordered dithering. Can output to PNG using PIL. The [PNG files](https://github.com/tromero/BayerMatrix/blob/master/images/) included in this repo should be enough for most use cases.
+A simple algorithm to generate bayer matrix for ordered dithering. Can output to PNG using PIL. The [PNG files in releases](https://github.com/tromero/BayerMatrix/blob/master/images/) should be enough for most use cases.
 
 For dithering, the 16x16 version should produce the best results with the least banding since it has 256 discrete values as opposed to 64 in the 8x8 version.
 
