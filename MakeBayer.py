@@ -96,12 +96,15 @@ if __name__ == "__main__":
     print(f"Generating matrices {sizes[0]}-{sizes[sizes.__len__()-1]}...")
     matrices = {size: MakeBayer(size) for size in sizes}
     print(f"Generated!")
+    
+    folder=Path("./images")
+    folder.mkdir(exist_ok=True)
     for size in sizes[0:4]:  # 2, 4, 8, 16
         # for tileCount in tileCounts:
         SaveAsImage(
             matrix=matrices[size],
             # tileCount=tileCount,
-            folder=Path("./images"),
+            folder=folder,
             mode="L",
         )
 
@@ -110,7 +113,7 @@ if __name__ == "__main__":
         SaveAsImage(
             matrix=matrices[size],
             # tileCount=tileCount,
-            folder=Path("./images"),
+            folder=folder,
             mode="I",
         )
 
@@ -119,7 +122,7 @@ if __name__ == "__main__":
         SaveAsImage(
             matrix=matrices[size],
             # tileCount=tileCount,
-            folder=Path("./images"),
+            folder=folder,
             ext=".tiff",
             format="TIFF",
             mode="F",
