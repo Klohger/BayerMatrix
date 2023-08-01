@@ -42,17 +42,18 @@ def SaveAsImage(
     tileCount: int = 1,
     mode: str = "L",
     folder: Path = Path.cwd(),
-    ext: str = ".png",
-    format: str | None = "PNG",
+    ext: str = "png",
+    format: str | None = None,
     normalize: bool = True,
 ):
     matrixSize = matrix.__len__()
     outputPath = (
         folder
-        / f"bayer{matrixSize}{f'tile{tileCount}' if tileCount > 1 else '' }{f'mode{mode}' if mode != 'L' else '' }{ext}"
+        / f'bayer{matrixSize}-Tile[{tileCount}]-Mode[{mode}]{ "-Norm" if normalize else "" }.{ext}'
     )
 
     img = Image.new(mode, size=(matrixSize * tileCount, matrixSize * tileCount), color=None)  # type: ignore
+
     imgData = img.load()
     for y in range(img.height):
         for x in range(img.width):
@@ -63,7 +64,7 @@ def SaveAsImage(
                         color = (
                             color * (255 / ((matrixSize * matrixSize) - 1))
                         ).__round__()
-                    case "I":
+                    case "I" | "I;16":
                         color = (
                             color * (65535 / ((matrixSize * matrixSize) - 1))
                         ).__round__()
@@ -89,16 +90,16 @@ def SaveAsImage(
 # NOTE: in the docs they say that mode "I" represents a pixel with a 32 bit signed integer.
 # This is false: they're represented with a 16 bit unsigned integer, just like "I;16".
 # You can read about it here: https://stackoverflow.com/questions/69192736/what-is-i-mode-in-pillow
-
 if __name__ == "__main__":
     sizes = 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024
     tileCounts = 1, 2, 4
     print(f"Generating matrices {sizes[0]}-{sizes[sizes.__len__()-1]}...")
     matrices = {size: MakeBayer(size) for size in sizes}
     print(f"Generated!")
-    
-    folder=Path("./images")
+
+    folder = Path("./images")
     folder.mkdir(exist_ok=True)
+
     for size in sizes[0:4]:  # 2, 4, 8, 16
         # for tileCount in tileCounts:
         SaveAsImage(
@@ -114,7 +115,7 @@ if __name__ == "__main__":
             matrix=matrices[size],
             # tileCount=tileCount,
             folder=folder,
-            mode="I",
+            mode="I;16",
         )
 
     for size in sizes:
@@ -123,7 +124,6 @@ if __name__ == "__main__":
             matrix=matrices[size],
             # tileCount=tileCount,
             folder=folder,
-            ext=".tiff",
-            format="TIFF",
+            ext="tiff",
             mode="F",
         )
