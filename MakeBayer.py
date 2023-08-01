@@ -22,7 +22,7 @@ def MakeBayer(
 
     half = size // 2
     # fmt: off
-    # subdivide into quad tree and call recursively 
+    # Subdivide into four and call recursively.
     MakeBayer(size=half,     x=x,          y=y,         value=value + (step * 0),   step=step * 4, matrix=matrix)   # Top Left
     MakeBayer(size=half,     x=x + half,   y=y + half,  value=value + (step * 1),   step=step * 4, matrix=matrix)   # Bottom Right
     MakeBayer(size=half,     x=x + half,   y=y,         value=value + (step * 2),   step=step * 4, matrix=matrix)   # Top Right
@@ -64,7 +64,6 @@ def SaveAsImage(
                             color * (255 / ((matrixSize * matrixSize) - 1))
                         ).__round__()
                     case "I":
-                        # so apparently the docs are lying and in i mode 'I' each pixel is represented by a 16 bit unsigned integer
                         color = (
                             color * (65535 / ((matrixSize * matrixSize) - 1))
                         ).__round__()
@@ -82,43 +81,45 @@ def SaveAsImage(
     print(f"Saved {outputPath}")
 
 
-if __name__ == "__main__":
-    # size should be a power of two.
-    # note that matrix sizes larger than 16 go out of 0..255 range,
-    # so image export will not work correctly
-    sizes = 2, 4, 8, 16, 32, 64, 128, 256
-    tileCounts = 1, 2, 4, 8, 16
+# NOTE: Size should be a power of two and is UNCHECKED.
+# Matrix sizes larger than 16 go out of 0..255 range,
+# so to export images you will have to increase the bit depth
+# by setting the image mode to "I", "I;16" or "F".
+# You can read about pillow modes here: https://pillow.readthedocs.io/en/latest/handbook/concepts.html#modes
+# NOTE: in the docs they say that mode "I" represents a pixel with a 32 bit signed integer.
+# This is false: they're represented with a 16 bit unsigned integer, just like "I;16".
+# You can read about it here: https://stackoverflow.com/questions/69192736/what-is-i-mode-in-pillow
 
-    sizesLowerThan32 = sizes[0:4]
-    for size in sizesLowerThan32:
-        for tileCount in tileCounts:
-            matrix = MakeBayer(size)
-            SaveAsImage(
-                matrix,
-                tileCount,
-                folder=Path("./images"),
-                mode="L",
-            )
-
-    sizesHigherThan16 = sizes[4:8]
-    for size in sizesHigherThan16:
-        for tileCount in tileCounts:
-            matrix = MakeBayer(size)
-            SaveAsImage(
-                matrix,
-                tileCount,
-                folder=Path("./images"),
-                mode="I",
-            )
-
-    for size in sizes:
-        for tileCount in tileCounts:
-            matrix = MakeBayer(size)
-            SaveAsImage(
-                matrix,
-                tileCount,
-                folder=Path("./images"),
-                ext=".tiff",
-                format="TIFF",
-                mode="F",
-            )
+# if __name__ == "__main__":
+# sizes = 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024
+# tileCounts = 1, 2, 4
+#
+# for size in sizes[0:4]: # 2, 4, 8, 16
+#    for tileCount in tileCounts:
+#        matrix = MakeBayer(size)
+#        SaveAsImage(
+#            matrix,
+#            tileCount,
+#            folder=Path("./images"),
+#            mode="L",
+#        )
+#
+# for size in sizes[4:8]: # 32, 64, 128, 256
+#    for tileCount in tileCounts:
+#        matrix = MakeBayer(size)
+#        SaveAsImage(
+#            matrix,
+#            tileCount,
+#            folder=Path("./images"),
+#            mode="I",
+#        )
+#
+# for size in sizes:
+#        matrix = MakeBayer(size)
+#        SaveAsImage(
+#            matrix,
+#            folder=Path("./images"),
+#            ext=".tiff",
+#            format="TIFF",
+#            mode="F",
+#        )
