@@ -97,30 +97,30 @@ if __name__ == "__main__":
     matrices = {size: MakeBayer(size) for size in sizes}
     print(f"Generated!")
     for size in sizes[0:4]:  # 2, 4, 8, 16
-        for tileCount in tileCounts:
-            SaveAsImage(
-                matrix=matrices[size],
-                tileCount=tileCount,
-                folder=Path("./images"),
-                mode="L",
-            )
+        # for tileCount in tileCounts:
+        SaveAsImage(
+            matrix=matrices[size],
+            # tileCount=tileCount,
+            folder=Path("./images"),
+            mode="L",
+        )
 
     for size in sizes[4:8]:  # 32, 64, 128, 256
-        for tileCount in tileCounts:
-            SaveAsImage(
-                matrix=matrices[size],
-                tileCount=tileCount,
-                folder=Path("./images"),
-                mode="I",
-            )
+        # for tileCount in tileCounts:
+        SaveAsImage(
+            matrix=matrices[size],
+            # tileCount=tileCount,
+            folder=Path("./images"),
+            mode="I",
+        )
 
     for size in sizes:
-        for tileCount in tileCounts:
-            SaveAsImage(
-                matrix=matrices[size],
-                tileCount=tileCount,
-                folder=Path("./images"),
-                ext=".tiff",
-                format="TIFF",
-                mode="F",
-            )
+        # for tileCount in tileCounts:
+        SaveAsImage(
+            matrix=matrices[size],
+            # tileCount=tileCount,
+            folder=Path("./images"),
+            ext=".tiff",
+            format="TIFF",
+            mode="F",
+        )
